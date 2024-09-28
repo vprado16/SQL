@@ -1,0 +1,65 @@
+--For this project, I downloaded Spotify data from Kaggle.--
+--Then I created a table to insert Spotify data into.--
+--Finally, I performed analytics on the data using SQL.--
+
+--Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+--Then I inserted the Spotify Data .csv into the table.--
+--Next, I explored the data using the following SQL.--
+
+--What were the top 10 tracks on Spotify in 2021 based on popularity? Whom were those tracks by?--
+
+SELECT artist_name
+,track_name
+,popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10;
+
+--What was the longest song on the Spotify Top 50 of 2021?--
+
+SELECT track_name
+,artist_name
+,duration_ms
+FROM BIT_DB.Spotifydata
+ORDER BY duration_ms DESC
+LIMIT 1;
+
+--What was the average popularity, tempo, and energy of the 2021 Spotify Top 50 by artist?--
+
+SELECT artist_name AS Artist
+,track_name AS Track
+,ROUND(AVG(popularity),3) AS AveragePopularity
+,ROUND(AVG(tempo),3) AS AverageTempo
+,ROUND(AVG(energy),3) AS AverageEnergy
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name;
+
+--How many artists had 3 or more tracks on the Top 50 list? Who were those artist(s)?--
+
+SELECT DISTINCT artist_name AS Artist
+,COUNT(track_name) AS Tracks_On_Top_50
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+HAVING COUNT(track_name) > 2
+ORDER BY COUNT(track_name) DESC;
